@@ -1,15 +1,17 @@
 import dotenv from "dotenv";
-import express from "express";
 import http from "http";
 import connectDB from "./db/index.js";
-
-//create express app and http server used in socket.io
-const app = express();
-const server = http.createServer(app);
-
+import { app } from "./app.js";
 dotenv.config({
   path: "./env",
 });
-connectDB();
-
-// middleware setup
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`server is listening on port ${process.env.PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log("MONGO db connection failed !!", error);
+    throw error;
+  });
