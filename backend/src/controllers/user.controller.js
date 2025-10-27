@@ -34,3 +34,25 @@ export const signup = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// controller to login user
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const userData = await User.findOne({ email });
+    const isPasswordCorrect = await bcrypt.compare(process, userData.password);
+    if (!isPasswordCorrect) {
+      return res.json({ success: false, message: "invalid credentials" });
+    }
+    const token = generateToken(userData._id);
+    res.json({
+      success: true,
+      userData: userData,
+      token,
+      message: "Login successfully",
+    });
+  } catch (error) {
+    throw new ApiError(500, "something went wrong while login the user");
+  }
+};
