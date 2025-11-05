@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/token.js";
+import { ApiError } from "../utils/ApiError.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // sign up new user
 
 export const signup = async (req, res) => {
@@ -41,7 +43,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const userData = await User.findOne({ email });
-    const isPasswordCorrect = await bcrypt.compare(process, userData.password);
+    const isPasswordCorrect = await bcrypt.compare(password, userData.password);
     if (!isPasswordCorrect) {
       return res.json({ success: false, message: "invalid credentials" });
     }
@@ -54,5 +56,36 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     throw new ApiError(500, "something went wrong while login the user");
+  }
+};
+// controller to check if user is authenticated
+export const checkAuth = (req, res) => {
+  res.json({ success: true, user: req.user });
+};
+
+// controller to update user profile details
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic, fullName, bio } = req.body;
+    const userId = req.user._id;
+    let updatedUser;
+    if (!profilePic) {
+      await User.findByIdAndUpdate(userId, { fullName, bio }, { new: true });
+    } else {
+      const upload = await cloudinary.uploader.upload(profilePic);
+      updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profilePic: upload.secure_url, fullName, bio, fullName },
+        { new: true }
+      );
+    }
+    res.json({
+      success: true,
+      userData: updatedUser,
+      message: "Profile updated successfully",
+    });
+  } catch (error) {
+    throw new ApiError(500, "something went wrong while updating profile");
   }
 };
