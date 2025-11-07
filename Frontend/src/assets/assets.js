@@ -67,7 +67,7 @@ export const userDummyData = [
   {
     _id: "680f5137f10f3cd28382ed10",
     email: "test4@greatstack.dev",
-    fullName: "Marco Jones",
+    fullName: "Virat Kohli",
     profilePic: profile_marco,
     bio: "Hi Everyone, I am Using QuickChat",
   },
