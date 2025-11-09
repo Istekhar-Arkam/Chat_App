@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../assets/assets.js";
+import { AuthContext } from "../../context/AuthContext.jsx";
 function Profile() {
+  const { authUser, updateProfile } = useContext(AuthContext);
   const [selectedImg, setSelectedImg] = useState(null);
   const navigate = useNavigate();
-  const [name, setName] = useState("Alison Martin");
-  const [bio, setBio] = useState("Hi everyone its IA");
+  const [name, setName] = useState(authUser.fullName);
+  const [bio, setBio] = useState(authUser.bio);
+
+  // line no 14 to 28 is used to update the profile details of user such as name , bio and profile picture
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/");
+    if (!selectedImg) {
+      await updateProfile({ fullName: name, bio });
+      navigate("/");
+      return;
+    }
+    const render = new FileReader();
+    render.readAsDataURL(selectedImg);
+    render.onload = async () => {
+      const base64Image = render.result;
+      await updateProfile({ profilePic: base64Image, fullName: name, bio });
+      navigate("/");
+    };
   };
 
   return (
@@ -68,8 +83,10 @@ function Profile() {
           </button>
         </form>
         <img
-          className="max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10"
-          src={assets.logo_icon}
+          className={`max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10 ${
+            selectedImg && "rounded-full"
+          }`}
+          src={authUser?.profilePic || assets.logo_icon}
           alt="logo"
         />
       </div>

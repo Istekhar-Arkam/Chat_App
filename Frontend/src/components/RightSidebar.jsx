@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { imagesDummyData } from "../assets/assets";
-function RightSidebar({ selectedUser }) {
+import { useContext } from "react";
+import { ChatContext } from "../../context/ChatContext.jsx";
+import assets from "../assets/assets";
+import { AuthContext } from "../../context/AuthContext.jsx";
+
+function RightSidebar() {
+  const { selectedUser, messages } = useContext(ChatContext);
+  const { logout, onlineUsers } = useContext(AuthContext);
+  const [msgImages, setMsgImages] = useState([]);
+
+  // get all the images from the messages and set them to state
+
+  useEffect(() => {
+    setMsgImages(messages.filter((msg) => msg.image).map((msg) => msg.image));
+  }, [messages]);
+
   return (
     selectedUser && (
       <div
@@ -15,7 +30,9 @@ function RightSidebar({ selectedUser }) {
             className="w-20 aspect-[1/1] rounded-full"
           />
           <h1 className="px-10 text-xl font-medium mx-auto flex items-center gap-2">
-            <p className="w-2 h-2 rounded-full bg-green-500"></p>
+            {onlineUsers.includes(selectedUser._id) && (
+              <p className="w-2 h-2 rounded-full bg-green-500"></p>
+            )}
             {selectedUser.fullName}
           </h1>
           <p className="px-10 mx-auto">{selectedUser.bio}</p>
@@ -25,7 +42,7 @@ function RightSidebar({ selectedUser }) {
         <div className="px-5 text-xs">
           <p>media</p>
           <div className="mt-2 max-h-[200px] overflow-y-scroll grid grid-cols-2 gap-4 opacity-80">
-            {imagesDummyData.map((url, idx) => (
+            {msgImages.map((url, idx) => (
               <div
                 key={idx}
                 onClick={() => window.open(url)}
@@ -36,7 +53,10 @@ function RightSidebar({ selectedUser }) {
             ))}
           </div>
         </div>
-        <button className="capitalize absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 px-20 rounded-full cursor-pointer">
+        <button
+          onClick={() => logout()}
+          className="capitalize absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 px-20 rounded-full cursor-pointer"
+        >
           logout
         </button>
       </div>
