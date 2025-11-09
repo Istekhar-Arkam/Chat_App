@@ -1,9 +1,10 @@
-// get all user except the logged user
 import { ApiError } from "../utils/ApiError.js";
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import { io, userSocketMap } from "../app.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import cloudinary from "../utils/cloudinary.js";
+
+// get all user except the logged user
 
 export const getUserForSidebar = async (req, res) => {
   try {

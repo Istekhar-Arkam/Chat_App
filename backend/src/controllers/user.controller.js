@@ -2,7 +2,8 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/token.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import cloudinary from "../utils/cloudinary.js";
+
 // sign up new user
 
 export const signup = async (req, res) => {
@@ -32,8 +33,7 @@ export const signup = async (req, res) => {
       message: "Account created successfully",
     });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    throw new ApiError(405, "something went wrong while signup the user");
   }
 };
 
@@ -55,10 +55,12 @@ export const login = async (req, res) => {
       message: "Login successfully",
     });
   } catch (error) {
-    throw new ApiError(500, "something went wrong while login the user");
+    throw new ApiError(400, "something went wrong while login the user");
   }
 };
+
 // controller to check if user is authenticated
+
 export const checkAuth = (req, res) => {
   res.json({ success: true, user: req.user });
 };
@@ -76,13 +78,13 @@ export const updateProfile = async (req, res) => {
       const upload = await cloudinary.uploader.upload(profilePic);
       updatedUser = await User.findByIdAndUpdate(
         userId,
-        { profilePic: upload.secure_url, fullName, bio, fullName },
+        { profilePic: upload.secure_url, bio, fullName },
         { new: true }
       );
     }
     res.json({
       success: true,
-      userData: updatedUser,
+      user: updatedUser,
       message: "Profile updated successfully",
     });
   } catch (error) {
