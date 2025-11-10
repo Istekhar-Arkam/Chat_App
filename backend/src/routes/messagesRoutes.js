@@ -4,7 +4,7 @@ import {
   markMessageAsSeen,
   getUserForSidebar,
   sendMessage,
-} from "../controllers/message.Controller.js";
+} from "../controllers/message.controller.js";
 
 import { protectRoute } from "../middleware/auth.middleware.js";
 const messagesRouter = express.Router();
