@@ -17,6 +17,7 @@ export const io = new Server(server, {
 export const userSocketMap = {}; //{userId:socketId}
 
 // socket.io connection handler
+
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   console.log(`User connected: ${userId}`);
@@ -47,16 +48,14 @@ app.use(
 
 app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", userRouter);
-app.use("/api/message", messagesRouter);
+app.use("/api/messages", messagesRouter);
 
-if(process.env.NODE_ENV!=="production"){
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server2 is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    console.log(`Server2 is running on port ${PORT}`);
+  });
 }
-
-
 
 export { app };
 

@@ -8,7 +8,7 @@ import cloudinary from "../utils/cloudinary.js";
 
 export const getUserForSidebar = async (req, res) => {
   try {
-    const userId = req.user._Id;
+    const userId = req.user._id;
     const filteredUsers = await User.find({ _id: { $ne: userId } }).select(
       "-password"
     );
@@ -41,7 +41,7 @@ export const getUserForSidebar = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { id: selectedUserId } = req.params;
-    const myId = req.user._Id;
+    const myId = req.user._id;
     const messages = await Message.find({
       $or: [
         { senderId: myId, receiverId: selectedUserId },
@@ -79,7 +79,7 @@ export const markMessageAsSeen = async (req, res) => {
 export const sendMessage = async (req, res) => {
   try {
     const receiverId = req.params.id;
-    const senderId = req.user._Id;
+    const senderId = req.user._id;
     const { text, image } = req.body;
 
     let imageUrl;
@@ -100,7 +100,7 @@ export const sendMessage = async (req, res) => {
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
-    res.status(200).json(newMessage);
+    res.json(newMessage);
   } catch (error) {
     throw new ApiError(
       401,
