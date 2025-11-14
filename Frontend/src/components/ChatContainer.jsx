@@ -3,8 +3,12 @@ import assets from "../assets/assets.js";
 import { formatMessageTime } from "../lib/utils.js";
 import { ChatContext } from "../../context/ChatContext.jsx";
 import { AuthContext } from "../../context/AuthContext.jsx";
-function ChatContainer() {
-  const { messages, selectedUser, setSelectedUser, sendMessages, getMessages } =
+import { toast } from "react-hot-toast";
+
+
+const ChatContainer=() =>{
+
+  const { messages, selectedUser, setSelectedUser, sendMessage, getMessages } =
     useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
 
@@ -17,7 +21,7 @@ function ChatContainer() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (input.trim() === "") return null;
-    await sendMessages({ text: input.trim() });
+    await sendMessage({ text: input.trim()});
     setInput("");
   };
 
@@ -31,7 +35,7 @@ function ChatContainer() {
     }
     const reader = new FileReader();
     reader.onloadend = async () => {
-      await sendMessages({ image: reader.result });
+      await sendMessage({ image: reader.result });
       e.target.value = "";
     };
     reader.readAsDataURL(file);
@@ -127,7 +131,7 @@ function ChatContainer() {
             onChange={(e) => setInput(e.target.value)}
             type="text"
             value={input}
-            onKeyDown={(e) => (e.key === "Enter" ? handleSendMessage(e) : null)}
+            onKeyDown={(e) => e.key === "Enter" ? handleSendMessage(e) : null}
             placeholder="Send a message"
             className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400"
           />

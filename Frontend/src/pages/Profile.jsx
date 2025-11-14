@@ -83,7 +83,7 @@ function Profile() {
           </button>
         </form>
         <img
-          className={`max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10 ${
+          className={`max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10 h-40 mt-40 ${
             selectedImg && "rounded-full"
           }`}
           src={authUser?.profilePic || assets.logo_icon}
