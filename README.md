@@ -51,5 +51,7 @@ Notifications using react-hot-toast
 🎨 Clean UI & UX
 
 TailwindCSS-based responsive interface
+
 Optimized and mobile-friendly
+
 Smooth transitions and modern design
