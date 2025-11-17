@@ -1,7 +1,6 @@
-import { ApiError } from "../utils/ApiError.js";
 import User from "../models/user.model.js";
-import Message from "../models/message.model.js";
-import { io, userSocketMap } from "../app.js";
+import Message from "../models/Message.model.js";
+import { io, userSocketMap } from "../server.js";
 import cloudinary from "../utils/cloudinary.js";
 
 // get all user except the logged user
@@ -27,12 +26,10 @@ export const getUserForSidebar = async (req, res) => {
       }
     });
     await Promise.all(promises);
-    res.status(200).json({ filteredUsers, unseenMessages });
+    res.json({ success: true, users: filteredUsers, unseenMessages });
   } catch (error) {
-    throw new ApiError(
-      401,
-      "something went wrong in count number of message section"
-    );
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -52,13 +49,10 @@ export const getMessages = async (req, res) => {
       { senderId: selectedUserId, receiverId: myId },
       { seen: true }
     );
-
-    res.status(200).json(messages);
+    res.json({ success: true, messages });
   } catch (error) {
-    throw new ApiError(
-      401,
-      "something went wrong in selecting message section"
-    );
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -68,9 +62,10 @@ export const markMessageAsSeen = async (req, res) => {
   try {
     const { id } = req.params;
     await Message.findByIdAndUpdate(id, { seen: true });
-    res.status(200).json({ message: "message marked as seen" });
+    res.json({ success: true });
   } catch (error) {
-    throw new ApiError(401, "something went wrong in mark message section");
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -78,9 +73,9 @@ export const markMessageAsSeen = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
+    const { text, image } = req.body;
     const receiverId = req.params.id;
     const senderId = req.user._id;
-    const { text, image } = req.body;
 
     let imageUrl;
     if (image) {
@@ -100,11 +95,9 @@ export const sendMessage = async (req, res) => {
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
-    res.json(newMessage);
+    res.json({ success: true, newMessage });
   } catch (error) {
-    throw new ApiError(
-      401,
-      "something went wrong in message to selected user in message section"
-    );
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
   }
 };

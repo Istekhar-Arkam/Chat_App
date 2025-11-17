@@ -1,16 +1,14 @@
 // to store the data that will used for all the components in the chat application
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import toast from "react-hot-toast";
-
 export const ChatContext = createContext();
+
 export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [unseenMessages, setUnseenMessages] = useState({});
-
   const { socket, axios } = useContext(AuthContext);
 
   // function to get all user for sidebar

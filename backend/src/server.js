@@ -4,8 +4,10 @@ import http from "http";
 import userRouter from "./routes/userRoutes.js";
 import messagesRouter from "./routes/messagesRoutes.js";
 import { Server } from "socket.io";
+import connectDB from "./db/index.js";
 const app = express();
 const server = http.createServer(app);
+
 // Socket.io setup
 
 export const io = new Server(server, {
@@ -50,11 +52,13 @@ app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messagesRouter);
 
+// connect to mongodb
+
+await connectDB();
+
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => {
-    console.log(`Server2 is running on port ${PORT}`);
-  });
+  server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 }
 
 export { app };

@@ -5,9 +5,7 @@ import { ChatContext } from "../../context/ChatContext.jsx";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { toast } from "react-hot-toast";
 
-
-const ChatContainer=() =>{
-
+const ChatContainer = () => {
   const { messages, selectedUser, setSelectedUser, sendMessage, getMessages } =
     useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
@@ -21,7 +19,7 @@ const ChatContainer=() =>{
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (input.trim() === "") return null;
-    await sendMessage({ text: input.trim()});
+    await sendMessage({ text: input.trim() });
     setInput("");
   };
 
@@ -131,7 +129,7 @@ const ChatContainer=() =>{
             onChange={(e) => setInput(e.target.value)}
             type="text"
             value={input}
-            onKeyDown={(e) => e.key === "Enter" ? handleSendMessage(e) : null}
+            onKeyDown={(e) => (e.key === "Enter" ? handleSendMessage(e) : null)}
             placeholder="Send a message"
             className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400"
           />
@@ -163,6 +161,6 @@ const ChatContainer=() =>{
       <p className="text-lg font-medium text-white">chat anytime, anywhere</p>
     </div>
   );
-}
+};
 
 export default ChatContainer;

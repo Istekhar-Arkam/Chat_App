@@ -8,13 +8,15 @@ import cloudinary from "../utils/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password, bio } = req.body;
+
+  // in case if this input is not available it will show error
   try {
     if (!fullName || !email || !password || !bio) {
       return res.json({ success: false, message: "missing details" });
     }
     const user = await User.findOne({ email });
     if (user) {
-      return res.json({ success: false, message: "account already existed" });
+      return res.json({ success: false, message: "Account already existed" });
     }
 
     const salt = await bcrypt.genSalt(10);

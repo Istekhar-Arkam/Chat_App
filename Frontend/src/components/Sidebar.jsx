@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import assets from "../assets/assets.js";
+import assets, { userDummyData } from "../assets/assets.js";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { ChatContext } from "../../context/ChatContext.jsx";
@@ -7,9 +7,9 @@ import { ChatContext } from "../../context/ChatContext.jsx";
 const Sidebar = () => {
   const {
     getUsers,
+    users,
     selectedUser,
     setSelectedUser,
-    users,
     unseenMessages,
     setUnseenMessages,
   } = useContext(ChatContext);
@@ -17,6 +17,7 @@ const Sidebar = () => {
   const { logout, onlineUsers } = useContext(AuthContext);
 
   const [input, setInput] = useState(false);
+
   const navigate = useNavigate();
 
   const filteredUsers = input
@@ -28,6 +29,7 @@ const Sidebar = () => {
   useEffect(() => {
     getUsers();
   }, [onlineUsers]);
+
   return (
     <div
       className={`bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-white ${
@@ -71,16 +73,15 @@ const Sidebar = () => {
         </div>
       </div>
       <div className="flex flex-col">
-        {filteredUsers.map((user, idx) => (
+        {filteredUsers.map((user, index) => (
           <div
             onClick={() => {
               setSelectedUser(user);
               setUnseenMessages((prev) => ({ ...prev, [user._id]: 0 }));
             }}
-            key={idx}
-            className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${
-              selectedUser?._id === user._id && `bg-[#282142]/50`
-            }`}
+            key={index}
+            className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm {
+              selectedUser?._id === user._id && 'bg-[#282142]/50'}`}
           >
             <img
               src={user?.profilePic || assets.avatar_icon}
