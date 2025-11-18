@@ -1,3 +1,4 @@
+import "dotenv/config"
 import express from "express";
 import cors from "cors";
 import http from "http";
@@ -39,12 +40,7 @@ io.on("connection", (socket) => {
 // middlewares setup
 
 app.use(express.json({ limit: "4mb" }));
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // routes setup
 
@@ -58,7 +54,7 @@ await connectDB();
 
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  server.listen(PORT, () => console.log("Server is running on port :"+ PORT));
 }
 
 //export server for versal
