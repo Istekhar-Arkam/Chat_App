@@ -95,7 +95,7 @@ Password "
         )}
         <button
           type="submit"
-          className="capitalize py-3 bg-gradient-to-r from-purple-400 to-violet-600 text-white rounded-md cursor-pointer"
+          className="capitalize py-3 bg-linear-to-r from-purple-400 to-violet-600 text-white rounded-md cursor-pointer"
         >
           {currState === "Sign up" ? "create Account" : "Login Now"}
         </button>
